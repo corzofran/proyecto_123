@@ -50,7 +50,7 @@ class _LoginViewState extends State<LoginView> {
                   children: [
                     const Icon(Icons.task_alt, size: 80, color: Colors.deepPurple)
                         .animate()
-                        .scale(duration: 600.ms, curve: Curves.backOut),
+                        .scale(duration: 600.ms, curve: Curves.easeOutBack),
                     const SizedBox(height: 16),
                     Text(
                       'Task Master',

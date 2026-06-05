@@ -16,6 +16,7 @@ class TaskViewModel extends ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
+  /// GET: Carga las tareas desde tu API de GitHub
   Future<void> fetchTasks() async {
     _isLoading = true;
     _errorMessage = null;
@@ -24,33 +25,31 @@ class TaskViewModel extends ChangeNotifier {
     try {
       _tasks = await _repository.getTasks();
     } catch (e) {
-      _errorMessage = e.toString();
+      _errorMessage = "Error al cargar tareas: ${e.toString()}";
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
+  /// POST: Crea una nueva tarea
   Future<void> addTask(String title) async {
-    _isLoading = true;
-    notifyListeners();
-
     try {
       final newTask = TaskModel(title: title);
       final createdTask = await _repository.createTask(newTask);
       _tasks.insert(0, createdTask);
+      notifyListeners();
     } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      _isLoading = false;
+      _errorMessage = "No se pudo crear la tarea";
       notifyListeners();
     }
   }
 
+  /// PUT: Cambia el estado (completado/pendiente)
   Future<void> toggleTaskStatus(TaskModel task) async {
     final updatedTask = task.copyWith(completed: !task.completed);
     
-    // Actualización optimista
+    // Actualización optimista para que la app se sienta rápida
     final index = _tasks.indexWhere((t) => t.id == task.id);
     if (index != -1) {
       _tasks[index] = updatedTask;
@@ -60,15 +59,16 @@ class TaskViewModel extends ChangeNotifier {
     try {
       await _repository.updateTask(updatedTask);
     } catch (e) {
-      // Revertir si falla
+      // Si falla tu API, revertimos el cambio
       if (index != -1) {
         _tasks[index] = task;
+        _errorMessage = "Error al actualizar en el servidor";
+        notifyListeners();
       }
-      _errorMessage = e.toString();
-      notifyListeners();
     }
   }
 
+  /// DELETE: Elimina la tarea
   Future<void> deleteTask(int id) async {
     final originalTasks = List<TaskModel>.from(_tasks);
     _tasks.removeWhere((t) => t.id == id);
@@ -78,7 +78,7 @@ class TaskViewModel extends ChangeNotifier {
       await _repository.deleteTask(id);
     } catch (e) {
       _tasks = originalTasks;
-      _errorMessage = e.toString();
+      _errorMessage = "Error al eliminar la tarea";
       notifyListeners();
     }
   }

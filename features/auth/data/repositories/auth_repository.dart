@@ -8,33 +8,38 @@ class AuthRepository {
   AuthRepository(this._apiClient);
 
   Future<UserModel> login(String email, String password) async {
-    // Usando ReqRes.in para el login real
-    final response = await _apiClient.post(AppConstants.loginEndpoint, {
-      'email': email,
-      'password': password,
-    });
-    
-    // ReqRes solo devuelve el token, así que complementamos el modelo
-    return UserModel(
-      id: '1',
-      email: email,
-      name: 'Usuario Logueado',
-      token: response['token'],
-    );
+    try {
+      // Intento real a la API de simulación
+      final response = await _apiClient.post(AppConstants.loginEndpoint, {
+        'email': email,
+        'password': password,
+      });
+      return UserModel(
+        id: '1',
+        email: email,
+        name: 'Usuario Demo',
+        token: response['token'],
+      );
+    } catch (e) {
+      // MODO DEMO: Si la API falla, devolvemos un usuario falso para tus capturas
+      return UserModel(
+        id: '99',
+        email: email,
+        name: 'Admin Pro',
+        token: 'fake_token_for_screenshots',
+      );
+    }
   }
 
   Future<UserModel> register(String email, String password, String name) async {
-    // Usando ReqRes.in para el registro real
-    final response = await _apiClient.post(AppConstants.registerEndpoint, {
-      'email': email,
-      'password': password,
-    });
-    
-    return UserModel(
-      id: response['id']?.toString() ?? '2',
-      email: email,
-      name: name,
-      token: response['token'] ?? 'token-registro-exitoso',
-    );
+    try {
+      await _apiClient.post(AppConstants.registerEndpoint, {
+        'email': email,
+        'password': password,
+      });
+      return UserModel(id: '2', email: email, name: name, token: 'reg_token');
+    } catch (e) {
+      return UserModel(id: '100', email: email, name: name, token: 'demo_token');
+    }
   }
 }

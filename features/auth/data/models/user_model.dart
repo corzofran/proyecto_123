@@ -13,9 +13,11 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'].toString(),
-      email: json['email'],
-      name: json['name'] ?? '',
+      // Soporta 'id', '_id' o 'userId'
+      id: (json['id'] ?? json['_id'] ?? json['userId'] ?? '').toString(),
+      email: json['email'] ?? '',
+      // Soporta 'name', 'nombre' o 'username'
+      name: json['name'] ?? json['nombre'] ?? json['username'] ?? 'Usuario',
       token: json['token'],
     );
   }
@@ -27,5 +29,19 @@ class UserModel {
       'name': name,
       'token': token,
     };
+  }
+
+  UserModel copyWith({
+    String? id,
+    String? email,
+    String? name,
+    String? token,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      token: token ?? this.token,
+    );
   }
 }
