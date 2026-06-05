@@ -84,7 +84,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Usa un email de JSONPlaceholder',
+                        'Ingresa tus credenciales para continuar',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: Colors.grey.shade500,
                         ),
@@ -98,7 +98,7 @@ class LoginScreen extends StatelessWidget {
                         decoration: const InputDecoration(
                           labelText: 'Correo electrónico',
                           prefixIcon: Icon(Icons.email_outlined),
-                          hintText: 'Ej: Sincere@april.biz',
+                          hintText: 'usuario@correo.com',
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -222,7 +222,7 @@ class LoginScreen extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Tip: usa "Sincere@april.biz" como email y cualquier contraseña.',
+                        'Tip: puedes usar el correo "Sincere@april.biz" para pruebas rápidas.',
                         style: TextStyle(
                           color: const Color(0xFF6750A4).withOpacity(0.85),
                           fontSize: 12,
